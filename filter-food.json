@@ -1,0 +1,90 @@
+[
+  {
+    "category": "breakfast",
+    "image": "assets/img/sidambaram-veg-idli1.png",
+    "alt": "Soft Idli",
+    "title": "Soft Idli",
+    "price": "50",
+    "description": "Soft and fluffy steamed rice cakes served with sambar and two varieties of chutneys."
+  },
+  {
+    "category": "breakfast",
+    "image": "assets/img/sidambaram-veg-Dosa1.png",
+    "alt": "Crispy Dosa",
+    "title": "Crispy Dosa",
+    "price": "70",
+    "description": "Thin and golden-crisp rice crepe served with flavorful sambar and chutneys."
+  },
+  {
+    "category": "breakfast",
+    "image": "assets/img/sidambaram-veg-poori1.png",
+    "alt": "Hot Poori",
+    "title": "Hot Poori",
+    "price": "80",
+    "description": "Deep-fried fluffy whole wheat bread served with delicious spiced potato masala."
+  },
+  {
+    "category": "breakfast",
+    "image": "assets/img/sidambaram-veg-vada1.png",
+    "alt": "Medu Vada",
+    "title": "Medu Vada",
+    "price": "40",
+    "description": "Crispy and savory deep-fried black lentil donuts infused with black pepper and curry leaves."
+  },
+  {
+    "category": "lunch",
+    "image": "assets/img/sidambaram-veg-meals.png",
+    "alt": "Special Meals",
+    "title": "South Indian Special Meals",
+    "price": "130",
+    "description": "A wholesome traditional feast featuring rice, sambar, rasam, kootu, poriyal, appalam, and curd."
+  },
+  {
+    "category": "lunch",
+    "image": "assets/img/sidambaram-veg-panner-butter-masala.png",
+    "alt": "Paneer Butter Masala",
+    "title": "Paneer Butter Masala",
+    "price": "160",
+    "description": "Creamy cottage cheese cubes cooked in a rich, spiced tomato-butter gravy."
+  },
+  {
+    "category": "lunch",
+    "image": "assets/img/sidambaram-veg-mushroom-masala.png",
+    "alt": "Mushroom Masala",
+    "title": "Mushroom Masala",
+    "price": "140",
+    "description": "Fresh button mushrooms simmered in a semi-dry onion-tomato spiced gravy."
+  },
+  {
+    "category": "snacks",
+    "image": "assets/img/sidambaram-veg-vada1.png",
+    "alt": "Medu Vada Snack",
+    "title": "Medu Vada",
+    "price": "40",
+    "description": "Crispy and savory deep-fried black lentil donuts served fresh with coconut chutney."
+  },
+  {
+    "category": "snacks",
+    "image": "assets/img/sidambaram-veg-poori1.png",
+    "alt": "Mini Poori",
+    "title": "Mini Poori Masala",
+    "price": "50",
+    "description": "Perfect evening snack of two mini puffed pooris served with warm potato masala."
+  },
+  {
+    "category": "dinner",
+    "image": "assets/img/sidambaram-veg-parotta1.png",
+    "alt": "South Indian Parotta",
+    "title": "South Indian Parotta",
+    "price": "90",
+    "description": "Two layered, flaky and crispy flatbreads served with aromatic veg kurma."
+  },
+  {
+    "category": "dinner",
+    "image": "assets/img/sidambaram-veg-Dosa1.png",
+    "alt": "Ghee Roast Dosa",
+    "title": "Ghee Roast Dosa",
+    "price": "95",
+    "description": "Super thin and crispy crepe drizzled with pure ghee, served with chutney and sambar."
+  }
+]

@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="content-language" content="en-IN" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>Your Order | Hotel Sidambaram</title>
+    <meta name="description" content="Review your order, apply a coupon, and send your order to Hotel Sidambaram via WhatsApp." />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" type="image/x-icon" href="https://visionary-quokka-244b53.netlify.app/assets/img/sidambaram-logo-ico.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/icons/bootstrap-icon/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/animate.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  </head>
+  <body class="commonBg">
+    <!-- SECTION: Header / Navigation -->
+    <header class="header pattern-bg" id="main-header">
+      <div class="header-container">
+        <!-- Logo -->
+        <a href="index.html" class="logo d-flex align-content-center align-items-center" id="nav-logo">
+          <img class="img-fluid animate__animated animate__slideInLeft" style="--animate-duration: 3s" src="assets/img/sidambaram-logo-icon.png" alt="Logo sidambaram" fetchpriority="high" />
+          <div class="d-flex flex-column text-start ms-2">
+            <span class="fw-normal" style="color: white; font-size: 1.2rem; letter-spacing: 1px; line-height: 1; margin-bottom: 1px; font-family: var(--font-primary) !important">Hotel</span>
+            <h2 class="display-4 mb-0" style="color: white; letter-spacing: 2px; line-height: 1">Sidambaram</h2>
+          </div>
+        </a>
+
+        <!-- Nav Links -->
+        <nav class="nav-menu" id="navigation-menu">
+          <!-- Mobile Location Dropdown (top of the slide-out menu) -->
+          <div class="location-dropdown d-block d-md-none mb-5" id="mobile-location-dropdown-wrapper">
+            <button class="location-btn w-100 justify-content-between" id="mobile-location-btn" aria-label="Select location" aria-haspopup="listbox" aria-expanded="false">
+              <span>
+                <i class="bi bi-geo-alt-fill text-warning me-2"></i>
+                <span class="selected-state" id="mobile-selected-state">Puducherry</span>
+              </span>
+              <i class="bi bi-chevron-down ms-1" style="font-size: 0.75rem"></i>
+            </button>
+            <div class="location-menu w-100" id="mobile-location-menu" style="right: auto; left: 0; min-width: 100%;">
+              <div class="location-menu-header">Select State</div>
+              <button class="location-option" data-state="Puducherry" data-lat="11.9416" data-lon="79.8083">Puducherry</button>
+              <button class="location-option" data-state="Tamil Nadu" data-lat="11.1271" data-lon="78.6569">Tamil Nadu</button>
+              <button class="location-option" data-state="Karnataka" data-lat="15.3173" data-lon="75.7139">Karnataka</button>
+              <button class="location-option" data-state="Kerala" data-lat="10.8505" data-lon="76.2711">Kerala</button>
+              <button class="location-option" data-state="Andhra Pradesh" data-lat="15.9129" data-lon="79.7400">Andhra Pradesh</button>
+              <button class="location-option" data-state="Telangana" data-lat="18.1124" data-lon="79.0193">Telangana</button>
+              <button class="location-option" data-state="Maharashtra" data-lat="19.7515" data-lon="75.7139">Maharashtra</button>
+            </div>
+          </div>
+
+          <ul class="nav-list">
+            <li class="nav-item"><a href="index.html#hero-slider-section" class="nav-link" id="link-home">Home</a></li>
+            <li class="nav-item"><a href="index.html#salad-promo" class="nav-link" id="link-about">About</a></li>
+            <li class="nav-item"><a href="index.html#popular-menu" class="nav-link" id="link-recipe">Menu</a></li>
+            <li class="nav-item"><a href="index.html#order" class="nav-link" id="link-contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <!-- Action Icons -->
+        <div class="header-actions">
+          <!-- Location Dropdown (Desktop / Tablet only) -->
+          <div class="location-dropdown d-none d-md-block" id="location-dropdown">
+            <button class="location-btn" id="location-btn" aria-label="Select location" aria-haspopup="listbox" aria-expanded="false">
+              <i class="bi bi-geo-alt-fill text-warning"></i>
+              <span class="selected-state" id="selected-state">Puducherry</span>
+              <i class="bi bi-chevron-down ms-1" style="font-size: 0.75rem;"></i>
+            </button>
+            <div class="location-menu" id="location-menu">
+              <div class="location-menu-header">Select State</div>
+              <button class="location-option" data-state="Puducherry" data-lat="11.9416" data-lon="79.8083">Puducherry</button>
+              <button class="location-option" data-state="Tamil Nadu" data-lat="11.1271" data-lon="78.6569">Tamil Nadu</button>
+              <button class="location-option" data-state="Karnataka" data-lat="15.3173" data-lon="75.7139">Karnataka</button>
+              <button class="location-option" data-state="Kerala" data-lat="10.8505" data-lon="76.2711">Kerala</button>
+              <button class="location-option" data-state="Andhra Pradesh" data-lat="15.9129" data-lon="79.7400">Andhra Pradesh</button>
+              <button class="location-option" data-state="Telangana" data-lat="18.1124" data-lon="79.0193">Telangana</button>
+              <button class="location-option" data-state="Maharashtra" data-lat="19.7515" data-lon="75.7139">Maharashtra</button>
+            </div>
+          </div>
+
+          <button class="action-btn cart-btn" id="cart-btn" aria-label="Shopping cart">
+            <i class="bi bi-bag"></i>
+            <span class="cart-count">0</span>
+          </button>
+          <!-- Hamburger Menu for Mobile -->
+          <button class="hamburger" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navigation-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION: Checkout / Order Summary -->
+    <main class="container" style="margin-top: 130px; margin-bottom: 6rem; min-height: 60vh">
+      <img class="pattern-border left" src="./assets/img/rangoli-border-left 1.png" alt="" fetchpriority="high" />
+      <img class="pattern-border right" src="./assets/img/rangoli-border-right 1.png" alt="" fetchpriority="high" />
+      <nav class="checkout-breadcrumb px-5 px-md-0">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="index.html#popular-menu">Menu</a>
+        <span>/</span>
+        <span class="current">Your Order</span>
+      </nav>
+
+      <div class="checkout-grid px-4 px-md-0">
+        <!-- Left: Order Items -->
+        <div class="order-items-panel">
+          <h2>Your Order</h2>
+          <div id="orderItemsList"></div>
+          <div class="order-empty-state" id="orderEmptyState" style="display: none">
+            <i class="bi bi-bag-x"></i>
+            <p>Your cart is empty</p>
+            <a href="index.html#popular-menu" class="btn salad-btn">Browse Menu</a>
+          </div>
+        </div>
+
+        <!-- Right: Order Summary -->
+        <div class="order-summary-panel">
+          <span class="order-summary-badge">ORDER SUMMARY</span>
+          <h2>Complete Your Order</h2>
+
+          <div class="order-price-breakdown">
+            <div class="order-summary-row">
+              <span>Subtotal</span>
+              <span id="orderSubtotal">₹0</span>
+            </div>
+            <div class="order-summary-row discount-row" id="orderDiscountRow" style="display: none">
+              <span>Discount</span>
+              <span id="orderDiscount">-₹0</span>
+            </div>
+            <div class="order-summary-row total-row">
+              <span>Total</span>
+              <span id="orderTotal">₹0</span>
+            </div>
+          </div>
+
+          <div class="promo-coupon-ticket" id="promoCouponTicket">
+            <div class="promo-ticket-main">
+              <span class="promo-ticket-badge">Opening Offer</span>
+              <h3 class="promo-ticket-title">Launch Discount</h3>
+              <p class="promo-ticket-desc">To celebrate our opening, we're offering special launch discounts for our customers.</p>
+              <ul class="promo-ticket-perks">
+                <li><span class="sparkle">✨</span> Get 5%–10% Discount</li>
+                <li><span class="sparkle">✨</span> Best offers only on our website</li>
+                <li><span class="sparkle">✨</span> Limited-time opening deal</li>
+              </ul>
+              <button type="button" id="promoApplyCouponBtn" class="promo-apply-btn">
+                Apply Coupon
+                <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+            <div class="promo-ticket-divider" aria-hidden="true"></div>
+            <div class="promo-ticket-stub">
+              <span class="promo-ticket-vertical">COUPON · SIDA10</span>
+              <span class="promo-ticket-exp">Order Now / Reserve Your Table Today</span>
+            </div>
+          </div>
+
+          <div class="order-coupon-box">
+            <input type="text" id="orderCouponInput" placeholder="Enter coupon code (try SIDA10)" />
+            <button type="button" id="orderApplyCouponBtn">Apply</button>
+          </div>
+          <p class="order-coupon-msg" id="orderCouponMsg"></p>
+
+          <div class="order-customer-details">
+            <h4>Customer Details</h4>
+            <input type="text" id="orderCustomerName" placeholder="Your Name" />
+
+            <div class="address-picker">
+              <div class="address-search-row">
+                <input type="text" id="addressSearchInput" placeholder="Search your delivery address..." autocomplete="off" />
+                <button type="button" id="addressLocateBtn" aria-label="Use my current location" title="Use my current location">
+                  <i class="bi bi-crosshair"></i>
+                </button>
+                <ul class="address-search-results" id="addressSearchResults"></ul>
+              </div>
+              <div id="addressPickerMap"></div>
+              <p class="address-picker-hint">
+                <i class="bi bi-info-circle"></i>
+                Search above, use your location, or drag the pin to set your exact delivery spot.
+              </p>
+            </div>
+
+            <textarea id="orderCustomerAddress" placeholder="Delivery address will appear here, or type it manually" rows="2"></textarea>
+          </div>
+
+          <button type="button" class="order-whatsapp-btn" id="orderWhatsappBtn">
+            <i class="bi bi-whatsapp"></i>
+            Send Order to WhatsApp
+          </button>
+        </div>
+      </div>
+    </main>
+    <!-- SECTION: Footer -->
+    <footer class="container-fluid footer pt-5 pb-4" style="background-color: #0f2c1d; color: #f8fafc; font-family: var(--font-primary)">
+      <div class="container">
+        <div class="row px-4 px-md-0 g-4">
+          <!-- Logo and About -->
+          <div class="col-lg-4 col-md-6 pe-lg-4">
+            <a href="#" class="logo d-flex align-items-center mb-4 text-decoration-none">
+              <img src="assets/img/sidambaram-logo-icon.png" alt="Sidambaram Logo" height="65" class="me-3" />
+              <div class="d-flex flex-column text-start">
+                <span class="fw-normal" style="color: white; font-size: 1.2rem; letter-spacing: 1px; line-height: 1; margin-bottom: 1px; font-family: var(--font-primary) !important">Hotel</span>
+                <h3 class="mb-0 fw-bold" style="color: white; letter-spacing: 1.5px; font-family: var(--font-header)">Sidambaram</h3>
+              </div>
+            </a>
+            <h6 class="fw-bold fs-3 mb-3 text-start" style="color: #ffbe0e; letter-spacing: 1.5px; text-transform: uppercase">Pure Veg Pondicherry</h6>
+            <p class="mb-4" style="opacity: 0.9; line-height: 1.8; font-size: 1.3rem; text-align: justify">Pondicherry's home for authentic, 100% pure-vegetarian South Indian food fresh meals, dosas and tiffin, made daily with freshly ground spices.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2)">
+                <i class="bi bi-leaf-fill text-white me-1"></i>
+                100% Pure Veg
+              </span>
+              <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2)">
+                <i class="bi bi-people-fill text-white me-1"></i>
+                Family Seating
+              </span>
+              <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2)">
+                <i class="bi bi-bag-fill text-white me-1"></i>
+                Takeaway
+              </span>
+              <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2)">
+                <i class="bi bi-bell-fill text-white me-1"></i>
+                Catering
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="col-lg-3 col-md-6 offset-lg-1">
+            <h5 class="fw-bold fs-3 mb-4 position-relative text-start" style="color: #ffbe0e; font-family: var(--font-header); letter-spacing: 1px">Quick Links</h5>
+            <ul class="list-unstyled footer-links" style="line-height: 2">
+              <li class="mb-3 text-start">
+                <a href="#popular-menu" class="text-white text-decoration-none d-inline-flex align-items-center">
+                  <i class="bi bi-chevron-right me-2" style="font-size: 0.8rem; color: #ffbe0e"></i>
+                  Menu
+                </a>
+              </li>
+              <li class="mb-3 text-start">
+                <a href="#" class="text-white text-decoration-none d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#menuPopupModal">
+                  <i class="bi bi-chevron-right me-2" style="font-size: 0.8rem; color: #ffbe0e"></i>
+                  Delicacies
+                </a>
+              </li>
+              <li class="mb-3 text-start">
+                <a href="#order" class="text-white text-decoration-none d-inline-flex align-items-center">
+                  <i class="bi bi-chevron-right me-2" style="font-size: 0.8rem; color: #ffbe0e"></i>
+                  Order Now
+                </a>
+              </li>
+              <li class="mb-3 text-start">
+                <a href="#salad-promo" class="text-white text-decoration-none d-inline-flex align-items-center">
+                  <i class="bi bi-chevron-right me-2" style="font-size: 0.8rem; color: #ffbe0e"></i>
+                  About Us
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Visit Us -->
+          <div class="col-lg-4 col-md-12">
+            <h5 class="fw-bold mb-4 fs-3 position-relative" style="color: #ffbe0e; font-family: var(--font-header); letter-spacing: 1px">Visit Us</h5>
+            <div class="mb-4">
+              <div class="d-flex mb-3 align-items-start">
+                <div class="me-3 mt-1 text-center flex-shrink-0" style="width: 24px">
+                  <i class="bi bi-geo-alt-fill" style="color: #ffbe0e; font-size: 1.2rem"></i>
+                </div>
+                <div>
+                  <a href="https://maps.app.goo.gl/H2i1bcYduYyuCcJi8" target="_blank" class="text-decoration-none text-start contact-info-link">
+                    <p class="mb-0 text-white-50" style="font-size: 1.3rem">
+                      Block No 7, Ward "F, Dr Ambedkar Salai, Nethaji Nagar, Uppalam,
+                      <br />
+                      Puducherry - 605001
+                    </p>
+                  </a>
+                </div>
+              </div>
+              <div class="d-flex mb-3 align-items-start">
+                <div class="me-3 mt-1 text-center flex-shrink-0" style="width: 24px">
+                  <i class="bi bi-clock-fill" style="color: #ffbe0e; font-size: 1.2rem"></i>
+                </div>
+                <div>
+                  <p class="mb-0 text-white-50" style="font-size: 1.3rem">Open daily - [7:00 AM - 10:30 PM]</p>
+                </div>
+              </div>
+              <div class="d-flex mb-3 align-items-start">
+                <div class="me-3 mt-1 text-center flex-shrink-0" style="width: 24px">
+                  <i class="bi bi-telephone-fill" style="color: #ffbe0e; font-size: 1.2rem"></i>
+                </div>
+                <div>
+                  <a href="tel:+917418790909" class="text-decoration-none text-start contact-info-link">
+                    <p class="mb-0 text-white-50" style="font-size: 1.3rem">+91 74187 90909</p>
+                    <p class="mb-0 text-white-50" style="font-size: 1.3rem">+91 74188 90909</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="d-flex flex-wrap gap-3 social-icons mt-4 pt-2">
+              <a href="https://www.facebook.com/share/1CwSnw3uoG/" target="_blank" aria-label="Facebook" class="facebook-icon d-inline-flex align-items-center justify-content-center text-white text-decoration-none rounded-circle" style="width: 40px; height: 40px; background-color: rgba(255, 255, 255, 0.1)">
+                <i class="bi bi-facebook fs-5"></i>
+              </a>
+              <a href="https://www.instagram.com/hotelsidambaram/" target="_blank" aria-label="Instagram" class="instagram-icon d-inline-flex align-items-center justify-content-center text-white text-decoration-none rounded-circle" style="width: 40px; height: 40px; background-color: rgba(255, 255, 255, 0.1)">
+                <i class="bi bi-instagram fs-5"></i>
+              </a>
+              <a href="https://www.youtube.com/@HotelSidambaram" target="_blank" aria-label="YouTube" class="youtube-icon d-inline-flex align-items-center justify-content-center text-white text-decoration-none rounded-circle" style="width: 40px; height: 40px; background-color: rgba(255, 255, 255, 0.1)">
+                <i class="bi bi-youtube fs-5"></i>
+              </a>
+              <a href="https://www.threads.com/@hotelsidambaram" target="_blank" aria-label="Threads" class="threads-icon d-inline-flex align-items-center justify-content-center text-white text-decoration-none rounded-circle" style="width: 40px; height: 40px; background-color: rgba(255, 255, 255, 0.1)">
+                <i class="bi bi-threads fs-5"></i>
+              </a>
+              <a href="https://x.com/hotelsidambaram" target="_blank" aria-label="Twitter X" class="twitter-icon d-inline-flex align-items-center justify-content-center text-white text-decoration-none rounded-circle" style="width: 40px; height: 40px; background-color: rgba(255, 255, 255, 0.1)">
+                <i class="bi bi-twitter-x fs-5"></i>
+              </a>
+              <a href="https://www.pinterest.com/hotelsidambaram/" target="_blank" aria-label="Pinterest" class="pinterest-icon d-inline-flex align-items-center justify-content-center text-white text-decoration-none rounded-circle" style="width: 40px; height: 40px; background-color: rgba(255, 255, 255, 0.1)">
+                <i class="bi bi-pinterest fs-5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container mt-5 pt-4 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important">
+        <div class="row px-4 px-md-0 align-items-center">
+          <div class="col-md-6 text-center text-md-start mb-0">
+            <p class="mb-0 text-white-50" style="font-size: 1.2rem">
+              &copy;
+              <span id="current-year">2026</span>
+              Hotel Sidambaram. All Rights Reserved.
+            </p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <p class="mb-0 text-white-50" style="font-size: 1.2rem">Designed for 100% Pure Veg Lovers</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- bootstrap cdn js -->
+    <script src="assets/js/bootstrap.bundle.min.js" defer></script>
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+    <!-- Main JavaScript File -->
+    <script src="assets/js/script.js" defer></script>
+  </body>
+</html>
