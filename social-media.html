@@ -425,20 +425,25 @@
         flex: 1;
         width: 100%;
         background: #121212;
-        overflow: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
         position: relative;
         display: flex;
         justify-content: center;
         align-items: flex-start;
         padding: 1rem;
+        scroll-behavior: smooth;
       }
       .pdf-canvas-container {
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 1.5rem;
         width: 100%;
       }
-      #pdfCanvas {
+      .pdf-page-canvas {
         max-width: 100%;
         height: auto !important;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
@@ -591,9 +596,7 @@
           <button type="button" class="pdf-modal-close" id="closePdfModal" aria-label="Close menu modal">&times;</button>
         </div>
         <div class="pdf-modal-body" id="pdfModalBody">
-          <div id="pdfCanvasContainer" class="pdf-canvas-container">
-            <canvas id="pdfCanvas"></canvas>
-          </div>
+          <div id="pdfCanvasContainer" class="pdf-canvas-container"></div>
           <div id="pdfLoading" class="pdf-loading-spinner" aria-live="polite">Loading Menu PDF...</div>
         </div>
         <div class="pdf-modal-footer">
@@ -622,81 +625,98 @@
           var nextBtn = document.getElementById('nextPdfPage');
           var pageNumSpan = document.getElementById('pdfPageNum');
           var pageCountSpan = document.getElementById('pdfPageCount');
-          var canvas = document.getElementById('pdfCanvas');
+          var pdfModalBody = document.getElementById('pdfModalBody');
+          var pdfCanvasContainer = document.getElementById('pdfCanvasContainer');
           var loadingEl = document.getElementById('pdfLoading');
           var pdfPath = 'assets/img/Menu-list.pdf';
 
-          if (!openBtn || !modal || !closeBtn || !overlay || !canvas) {
+          if (!openBtn || !modal || !closeBtn || !overlay || !pdfCanvasContainer || !pdfModalBody) {
             return;
           }
 
           var pdfDoc = null;
-          var pageNum = 1;
-          var pageRendering = false;
-          var pageNumPending = null;
-          var ctx = canvas.getContext('2d');
+          var currentPageNum = 1;
+          var pageCanvases = [];
 
           if (typeof pdfjsLib !== 'undefined') {
             pdfjsLib.GlobalWorkerOptions.workerSrc =
               'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
           }
 
-          function renderPage(num) {
-            pageRendering = true;
-            if (loadingEl) loadingEl.style.display = 'block';
+          function updateNavButtons() {
+            if (!pdfDoc) return;
+            if (prevBtn) prevBtn.disabled = currentPageNum <= 1;
+            if (nextBtn) nextBtn.disabled = currentPageNum >= pdfDoc.numPages;
+          }
 
-            pdfDoc.getPage(num).then(function (page) {
-              var viewport = page.getViewport({ scale: 1.5 });
-              var outputScale = window.devicePixelRatio || 1;
+          function updateActivePageOnScroll() {
+            if (!pdfModalBody || pageCanvases.length === 0) return;
+            var containerTop = pdfModalBody.getBoundingClientRect().top;
+            var currentActive = 1;
+            var minDistance = Infinity;
 
-              canvas.width = Math.floor(viewport.width * outputScale);
-              canvas.height = Math.floor(viewport.height * outputScale);
-              canvas.style.width = Math.floor(viewport.width) + 'px';
-              canvas.style.height = Math.floor(viewport.height) + 'px';
+            for (var i = 0; i < pageCanvases.length; i++) {
+              var rect = pageCanvases[i].getBoundingClientRect();
+              var distance = Math.abs(rect.top - containerTop);
+              if (distance < minDistance) {
+                minDistance = distance;
+                currentActive = i + 1;
+              }
+            }
 
-              var transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-
-              var renderContext = {
-                canvasContext: ctx,
-                transform: transform,
-                viewport: viewport
-              };
-
-              var renderTask = page.render(renderContext);
-              renderTask.promise.then(function () {
-                pageRendering = false;
-                if (loadingEl) loadingEl.style.display = 'none';
-                if (pageNumPending !== null) {
-                  renderPage(pageNumPending);
-                  pageNumPending = null;
-                }
-              }).catch(function (err) {
-                console.error('Error rendering page:', err);
-                pageRendering = false;
-                if (loadingEl) loadingEl.style.display = 'none';
-              });
-            }).catch(function (err) {
-              console.error('Error getting page:', err);
-              pageRendering = false;
-              if (loadingEl) loadingEl.style.display = 'none';
-            });
-
-            if (pageNumSpan) pageNumSpan.textContent = num;
+            currentPageNum = currentActive;
+            if (pageNumSpan) pageNumSpan.textContent = currentPageNum;
             updateNavButtons();
           }
 
-          function queueRenderPage(num) {
-            if (pageRendering) {
-              pageNumPending = num;
-            } else {
-              renderPage(num);
-            }
-          }
+          pdfModalBody.addEventListener('scroll', function () {
+            window.requestAnimationFrame(updateActivePageOnScroll);
+          });
 
-          function updateNavButtons() {
-            if (!pdfDoc) return;
-            if (prevBtn) prevBtn.disabled = pageNum <= 1;
-            if (nextBtn) nextBtn.disabled = pageNum >= pdfDoc.numPages;
+          function renderAllPages() {
+            pageCanvases = [];
+            pdfCanvasContainer.innerHTML = '';
+            var pagesRendered = 0;
+
+            for (var i = 1; i <= pdfDoc.numPages; i++) {
+              (function (num) {
+                var pCanvas = document.createElement('canvas');
+                pCanvas.className = 'pdf-page-canvas';
+                pCanvas.id = 'pdfPage_' + num;
+                pdfCanvasContainer.appendChild(pCanvas);
+                pageCanvases.push(pCanvas);
+
+                pdfDoc.getPage(num).then(function (page) {
+                  var viewport = page.getViewport({ scale: 1.5 });
+                  var outputScale = window.devicePixelRatio || 1;
+
+                  pCanvas.width = Math.floor(viewport.width * outputScale);
+                  pCanvas.height = Math.floor(viewport.height * outputScale);
+                  pCanvas.style.width = Math.floor(viewport.width) + 'px';
+                  pCanvas.style.height = Math.floor(viewport.height) + 'px';
+
+                  var transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+
+                  var renderContext = {
+                    canvasContext: pCanvas.getContext('2d'),
+                    transform: transform,
+                    viewport: viewport
+                  };
+
+                  page.render(renderContext).promise.then(function () {
+                    pagesRendered++;
+                    if (pagesRendered === pdfDoc.numPages) {
+                      if (loadingEl) loadingEl.style.display = 'none';
+                    }
+                  }).catch(function (err) {
+                    console.error('Error rendering page ' + num + ':', err);
+                  });
+                }).catch(function (err) {
+                  console.error('Error getting page ' + num + ':', err);
+                });
+              })(i);
+            }
+            updateActivePageOnScroll();
           }
 
           function loadPdf() {
@@ -713,7 +733,7 @@
             pdfjsLib.getDocument(pdfPath).promise.then(function (pdfDoc_) {
               pdfDoc = pdfDoc_;
               if (pageCountSpan) pageCountSpan.textContent = pdfDoc.numPages;
-              renderPage(pageNum);
+              renderAllPages();
             }).catch(function (err) {
               console.error('Error loading PDF document:', err);
               if (loadingEl) {
@@ -742,17 +762,21 @@
 
           if (prevBtn) {
             prevBtn.addEventListener('click', function () {
-              if (pageNum <= 1) return;
-              pageNum--;
-              queueRenderPage(pageNum);
+              if (currentPageNum <= 1) return;
+              var targetCanvas = pageCanvases[currentPageNum - 2];
+              if (targetCanvas) {
+                targetCanvas.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
             });
           }
 
           if (nextBtn) {
             nextBtn.addEventListener('click', function () {
-              if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
-              pageNum++;
-              queueRenderPage(pageNum);
+              if (!pdfDoc || currentPageNum >= pageCanvases.length) return;
+              var targetCanvas = pageCanvases[currentPageNum];
+              if (targetCanvas) {
+                targetCanvas.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
             });
           }
 
