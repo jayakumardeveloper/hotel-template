@@ -378,15 +378,82 @@
       .pdf-modal-close:hover {
         color: #ffbe0e;
       }
+      .pdf-modal-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        background: #252525;
+        border-top: 1px solid #333;
+      }
+      .pdf-modal-controls {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+      }
+      .pdf-page-info {
+        color: #ddd;
+        font-size: 1.4rem;
+        font-weight: 500;
+      }
+      .pdf-nav-btn {
+        background: #333;
+        border: 1px solid #ffbe0e;
+        color: #ffbe0e;
+        font-size: 1.4rem;
+        font-weight: bold;
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s, color 0.2s;
+      }
+      .pdf-nav-btn:hover:not(:disabled) {
+        background: #ffbe0e;
+        color: #1a1a1a;
+      }
+      .pdf-nav-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        border-color: #555;
+        color: #777;
+      }
       .pdf-modal-body {
         flex: 1;
         width: 100%;
-        background: #000;
+        background: #121212;
+        overflow: auto;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 1rem;
       }
-      .pdf-modal-body iframe {
+      .pdf-canvas-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         width: 100%;
-        height: 100%;
-        border: none;
+      }
+      #pdfCanvas {
+        max-width: 100%;
+        height: auto !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+        border-radius: 4px;
+        background: #ffffff;
+      }
+      .pdf-loading-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffbe0e;
+        font-size: 1.6rem;
+        font-weight: 600;
+        text-align: center;
       }
       @media (max-width: 576px) {
         .pdf-modal-container {
@@ -396,12 +463,20 @@
         .pdf-modal-header {
           padding: 0.75rem 1rem;
         }
+        .pdf-modal-footer {
+          padding: 0.5rem 1rem;
+        }
         .pdf-modal-title {
           font-size: 1.5rem;
         }
-      }
-      viewer-toolbar#toolbar {
-        display: none;
+        .pdf-page-info {
+          font-size: 1.2rem;
+        }
+        .pdf-nav-btn {
+          width: 28px;
+          height: 28px;
+          font-size: 1.2rem;
+        }
       }
     </style>
 
@@ -515,13 +590,26 @@
           <h2 id="pdfModalTitle" class="pdf-modal-title">Hotel Sidambaram Menu</h2>
           <button type="button" class="pdf-modal-close" id="closePdfModal" aria-label="Close menu modal">&times;</button>
         </div>
-        <div class="pdf-modal-body">
-          <iframe id="pdfIframe" src="" title="Hotel Sidambaram Menu PDF" frameborder="0"></iframe>
+        <div class="pdf-modal-body" id="pdfModalBody">
+          <div id="pdfCanvasContainer" class="pdf-canvas-container">
+            <canvas id="pdfCanvas"></canvas>
+          </div>
+          <div id="pdfLoading" class="pdf-loading-spinner" aria-live="polite">Loading Menu PDF...</div>
+        </div>
+        <div class="pdf-modal-footer">
+          <div class="pdf-modal-controls">
+            <button type="button" class="pdf-nav-btn" id="prevPdfPage" title="Previous Page" aria-label="Previous Page">&lt;</button>
+            <span id="pdfPageInfo" class="pdf-page-info">Page <span id="pdfPageNum">1</span> of <span id="pdfPageCount">1</span></span>
+            <button type="button" class="pdf-nav-btn" id="nextPdfPage" title="Next Page" aria-label="Next Page">&gt;</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- PDF Modal Script -->
+    <!-- PDF.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <!-- PDF Canvas Modal Script -->
     <script>
       (function () {
         'use strict';
@@ -530,21 +618,116 @@
           var modal = document.getElementById('pdfModal');
           var closeBtn = document.getElementById('closePdfModal');
           var overlay = document.getElementById('pdfModalOverlay');
-          var iframe = document.getElementById('pdfIframe');
+          var prevBtn = document.getElementById('prevPdfPage');
+          var nextBtn = document.getElementById('nextPdfPage');
+          var pageNumSpan = document.getElementById('pdfPageNum');
+          var pageCountSpan = document.getElementById('pdfPageCount');
+          var canvas = document.getElementById('pdfCanvas');
+          var loadingEl = document.getElementById('pdfLoading');
           var pdfPath = 'assets/img/Menu-list.pdf';
 
-          if (!openBtn || !modal || !closeBtn || !overlay || !iframe) {
+          if (!openBtn || !modal || !closeBtn || !overlay || !canvas) {
             return;
+          }
+
+          var pdfDoc = null;
+          var pageNum = 1;
+          var pageRendering = false;
+          var pageNumPending = null;
+          var ctx = canvas.getContext('2d');
+
+          if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc =
+              'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          }
+
+          function renderPage(num) {
+            pageRendering = true;
+            if (loadingEl) loadingEl.style.display = 'block';
+
+            pdfDoc.getPage(num).then(function (page) {
+              var viewport = page.getViewport({ scale: 1.5 });
+              var outputScale = window.devicePixelRatio || 1;
+
+              canvas.width = Math.floor(viewport.width * outputScale);
+              canvas.height = Math.floor(viewport.height * outputScale);
+              canvas.style.width = Math.floor(viewport.width) + 'px';
+              canvas.style.height = Math.floor(viewport.height) + 'px';
+
+              var transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+
+              var renderContext = {
+                canvasContext: ctx,
+                transform: transform,
+                viewport: viewport
+              };
+
+              var renderTask = page.render(renderContext);
+              renderTask.promise.then(function () {
+                pageRendering = false;
+                if (loadingEl) loadingEl.style.display = 'none';
+                if (pageNumPending !== null) {
+                  renderPage(pageNumPending);
+                  pageNumPending = null;
+                }
+              }).catch(function (err) {
+                console.error('Error rendering page:', err);
+                pageRendering = false;
+                if (loadingEl) loadingEl.style.display = 'none';
+              });
+            }).catch(function (err) {
+              console.error('Error getting page:', err);
+              pageRendering = false;
+              if (loadingEl) loadingEl.style.display = 'none';
+            });
+
+            if (pageNumSpan) pageNumSpan.textContent = num;
+            updateNavButtons();
+          }
+
+          function queueRenderPage(num) {
+            if (pageRendering) {
+              pageNumPending = num;
+            } else {
+              renderPage(num);
+            }
+          }
+
+          function updateNavButtons() {
+            if (!pdfDoc) return;
+            if (prevBtn) prevBtn.disabled = pageNum <= 1;
+            if (nextBtn) nextBtn.disabled = pageNum >= pdfDoc.numPages;
+          }
+
+          function loadPdf() {
+            if (pdfDoc) return;
+            if (loadingEl) loadingEl.style.display = 'block';
+
+            if (typeof pdfjsLib === 'undefined') {
+              if (loadingEl) {
+                loadingEl.innerHTML = 'Unable to load PDF viewer library. <a href="' + pdfPath + '" target="_blank" style="color:#ffbe0e;text-decoration:underline;">Click to Download PDF</a>';
+              }
+              return;
+            }
+
+            pdfjsLib.getDocument(pdfPath).promise.then(function (pdfDoc_) {
+              pdfDoc = pdfDoc_;
+              if (pageCountSpan) pageCountSpan.textContent = pdfDoc.numPages;
+              renderPage(pageNum);
+            }).catch(function (err) {
+              console.error('Error loading PDF document:', err);
+              if (loadingEl) {
+                loadingEl.innerHTML = 'Unable to render PDF on canvas. <a href="' + pdfPath + '" target="_blank" style="color:#ffbe0e;text-decoration:underline;">Click to Download PDF</a>';
+              }
+            });
           }
 
           function openModal(e) {
             if (e) e.preventDefault();
-            if (iframe.getAttribute('src') !== pdfPath) {
-              iframe.setAttribute('src', pdfPath);
-            }
             modal.classList.add('active');
             modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            loadPdf();
           }
 
           function closeModal() {
@@ -557,13 +740,29 @@
           closeBtn.addEventListener('click', closeModal);
           overlay.addEventListener('click', closeModal);
 
+          if (prevBtn) {
+            prevBtn.addEventListener('click', function () {
+              if (pageNum <= 1) return;
+              pageNum--;
+              queueRenderPage(pageNum);
+            });
+          }
+
+          if (nextBtn) {
+            nextBtn.addEventListener('click', function () {
+              if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+              pageNum++;
+              queueRenderPage(pageNum);
+            });
+          }
+
           document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && modal.classList.contains('active')) {
               closeModal();
             }
           });
         } catch (err) {
-          console.error('Menu modal initialization failed:', err);
+          console.error('Menu modal canvas initialization failed:', err);
         }
       })();
     </script>
