@@ -1,7 +1,7 @@
 [
   {
     "category": "breakfast",
-    "image": "assets/img/sidambaram-veg-idli1.png",
+    "image": "assets/img/sidambaram-veg-idli.png",
     "alt": "Soft Idli",
     "title": "Soft Idli",
     "price": "50",
@@ -9,7 +9,7 @@
   },
   {
     "category": "breakfast",
-    "image": "assets/img/sidambaram-veg-Dosa1.png",
+    "image": "assets/img/sidambaram-veg-Dosa1.webp",
     "alt": "Crispy Dosa",
     "title": "Crispy Dosa",
     "price": "70",
@@ -17,7 +17,7 @@
   },
   {
     "category": "breakfast",
-    "image": "assets/img/sidambaram-veg-poori1.png",
+    "image": "assets/img/sidambaram-veg-poori1.webp",
     "alt": "Hot Poori",
     "title": "Hot Poori",
     "price": "80",
@@ -25,7 +25,7 @@
   },
   {
     "category": "breakfast",
-    "image": "assets/img/sidambaram-veg-vada1.png",
+    "image": "assets/img/sidambaram-veg-vada1.webp",
     "alt": "Medu Vada",
     "title": "Medu Vada",
     "price": "40",
@@ -33,7 +33,7 @@
   },
   {
     "category": "lunch",
-    "image": "assets/img/sidambaram-veg-meals.png",
+    "image": "assets/img/sidambaram-veg-meals.webp",
     "alt": "Special Meals",
     "title": "South Indian Special Meals",
     "price": "130",
@@ -41,7 +41,7 @@
   },
   {
     "category": "lunch",
-    "image": "assets/img/sidambaram-veg-panner-butter-masala.png",
+    "image": "assets/img/sidambaram-veg-panner-butter-masala.webp",
     "alt": "Paneer Butter Masala",
     "title": "Paneer Butter Masala",
     "price": "160",
@@ -49,7 +49,7 @@
   },
   {
     "category": "lunch",
-    "image": "assets/img/sidambaram-veg-mushroom-masala.png",
+    "image": "assets/img/sidambaram-veg-mushroom-masala.webp",
     "alt": "Mushroom Masala",
     "title": "Mushroom Masala",
     "price": "140",
@@ -57,7 +57,7 @@
   },
   {
     "category": "snacks",
-    "image": "assets/img/sidambaram-veg-vada1.png",
+    "image": "assets/img/sidambaram-veg-vada1.webp",
     "alt": "Medu Vada Snack",
     "title": "Medu Vada",
     "price": "40",
@@ -65,7 +65,7 @@
   },
   {
     "category": "snacks",
-    "image": "assets/img/sidambaram-veg-poori1.png",
+    "image": "assets/img/sidambaram-veg-poori1.webp",
     "alt": "Mini Poori",
     "title": "Mini Poori Masala",
     "price": "50",
@@ -73,7 +73,7 @@
   },
   {
     "category": "dinner",
-    "image": "assets/img/sidambaram-veg-parotta1.png",
+    "image": "assets/img/sidambaram-veg-parotta1.webp",
     "alt": "South Indian Parotta",
     "title": "South Indian Parotta",
     "price": "90",
@@ -81,7 +81,7 @@
   },
   {
     "category": "dinner",
-    "image": "assets/img/sidambaram-veg-Dosa1.png",
+    "image": "assets/img/sidambaram-veg-Dosa1.webp",
     "alt": "Ghee Roast Dosa",
     "title": "Ghee Roast Dosa",
     "price": "95",
